@@ -1,0 +1,15 @@
+# Python
+__pycache__
+build
+dist
+*.pyc
+
+# OS
+.DS_Store
+
+# Ide
+*.iml
+
+# App
+generated
+
