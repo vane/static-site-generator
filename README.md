@@ -4,7 +4,7 @@ static-site-generator
 
 ## Description
 
-Static website generator based on jekyll format to generate [vane.pl](https://vane.pl) website  
+Static website generator based that is using jekyll format to generate [vane.pl](https://vane.pl) website  
 
 
 ## Dependencies
