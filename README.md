@@ -29,5 +29,5 @@ pip install requirements.txt
 ```
 ## Usage
 Specify config.yml input and output directory  
-- input - directory with jekyll data
+- input - directory with jekyll website data (where is _config.yml file)
 - output - directory for generated files (assets directory in output will be deleted during generation)
