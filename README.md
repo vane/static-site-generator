@@ -34,4 +34,4 @@ Specify config.yml input and output directory
 
 ## Why
 Because I can.  
-I can't manage meta tags properly or generate sitemap for each tag or custom pages. Generate one page only or read update page date from git repository instead of using some jekyll internal system. So I recreated jekyll with all above plugins output using 400 lines of python code.
+So I recreated jekyll with all above plugins using 400 lines of python code.
