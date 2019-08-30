@@ -8,16 +8,16 @@ Static website generator based on jekyll format to generate [vane.pl](https://va
 
 
 ## Dependencies
-pygments - for syntax hightlighting
-libsass - for sass style compile
-csscompressor - for css compression
-markdown - for makrdown parsing generation
-liquidpy - for liquid template parsing
+pygments - for syntax hightlighting  
+libsass - for sass style compile  
+csscompressor - for css compression  
+markdown - for makrdown parsing generation  
+liquidpy - for liquid template parsing  
 
 Emulate
-- jekyll-feed
-- jekyll-sitemap
-- jekyll-seo-tag
+- jekyll-feed  
+- jekyll-sitemap  
+- jekyll-seo-tag  
 
 ## Install
 ```bash
@@ -25,5 +25,6 @@ git clone
 pip install requirements.txt
 ```
 ## Usage
-Specify config.yml input and output directory
+Specify config.yml input and output directory  
 - input - directory with jekyll data
+- output - directory for generated files (assets directory in output will be deleted during generation)
