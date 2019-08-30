@@ -16,7 +16,7 @@ markdown - for makrdown parsing generation
 liquidpy - for liquid template parsing  
 
 Emulate
-- jekyl
+- jekyll
 - rouge
 - jekyll-feed  
 - jekyll-sitemap  
