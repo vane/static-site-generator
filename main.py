@@ -21,9 +21,11 @@ def read_layouts(helpers):
         fpath = lib.helper.join_path(path, fname)
         data = lib.helper.read_file(fpath)
         layout[fname.split('.')[0]] = liquid.Liquid(data, **helpers)
+    print('read layouts')
     Config.LAYOUT = layout
 
 def generate_style():
+    print('genreated css')
     style_path = lib.helper.join_path(Config.INPUT, Config.STYLE)
     fpath = lib.helper.join_path(style_path, Config.STYLE_INPUT_FILE_NAME)
     with open(fpath) as f:
@@ -33,7 +35,6 @@ def generate_style():
     lib.helper.makedirs(dst)
     data = csscompressor.compress(data)
     lib.helper.write_file(lib.helper.join_path(dst, Config.STYLE_OUTPUT_FILE_NAME), data)
-    print('genreated css')
 
 def load_page(path, fname, split_fname=True):
     content = ''
@@ -56,6 +57,7 @@ def load_page(path, fname, split_fname=True):
     page_config.seek(0)
     page_config = yaml.safe_load(page_config)
     page_config['content'] = content
+    page_config['content_raw'] = content
     if date_data is not None:
         page_config['date'] = dateutil.parser.parse(date_data)
     if split_fname:
@@ -72,6 +74,8 @@ def generate_page(page_config, helpers=None):
     ret = layout.render(page=ConfigObject.create(page_config),
                         site=ConfigObject.create(Config.CONFIG),
                         **helpers)
+    ret = lib.generator.seo_generate(page_config, ret, Config.CONFIG)
+    ret = lib.generator.feed_meta_generate(page_config, ret, Config.CONFIG)
     out_path = lib.helper.join_path(Config.OUTPUT, page_config['url'])
     os.makedirs(out_path, exist_ok=True)
     lib.helper.write_file(lib.helper.join_path(out_path, 'index.html'), ret)
@@ -81,11 +85,13 @@ def generate_index(posts, helpers):
     comparator = operator.attrgetter('date')
     posts.sort(key=comparator, reverse=True)
     Config.CONFIG['posts'] = posts
+    print('generate index')
     generate_page(page_config=page_config, helpers=helpers)
 
 def copy_assets():
     src = lib.helper.join_path(Config.INPUT, Config.ASSETS)
     dst = lib.helper.join_path(Config.OUTPUT, Config.ASSETS)
+    print('copy assets')
     shutil.rmtree(dst)
     shutil.copytree(src, dst)
 
@@ -97,18 +103,21 @@ def generate():
     posts = []
     for i, fname in enumerate(os.listdir(path)):
         page_config = load_page(path, fname)
+        print('generate {}'.format(page_config['url']))
         posts.append(ConfigObject.create(page_config))
         generate_page(page_config)
     for i, fname in enumerate(os.listdir(Config.INPUT)):
         if fname.endswith('.markdown'):
             page_config = load_page(Config.INPUT, fname, split_fname=False)
+            print('generate {}'.format(page_config['url']))
             data = {'content': lib.generator.md(page_config['content'])}
             generate_page(page_config, data)
     generate_index(posts, helpers)
     copy_assets()
     generate_style()
-    lib.generator.SitemapGenerator.generate(posts, Config.CONFIG, output=Config.OUTPUT)
-    lib.generator.RobotsTxtGenerator.generate(Config.CONFIG, output=Config.OUTPUT)
+    lib.generator.sitemap(posts, Config.CONFIG, output=Config.OUTPUT)
+    lib.generator.robots_txt(Config.CONFIG, output=Config.OUTPUT)
+    lib.generator.feed_xml(posts, Config.CONFIG, output=Config.OUTPUT)
     pass
 
 if __name__ == '__main__':

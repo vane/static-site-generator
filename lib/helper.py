@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
+import re
 import os
 import lib.config
 import urllib.parse
@@ -61,3 +62,6 @@ def makedirs(path):
 
 def join_path(path, *paths):
     return os.path.join(path, *paths)
+
+def strip_tags(data):
+    return re.sub('<[^<]+?>', '', data).strip()
