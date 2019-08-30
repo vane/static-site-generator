@@ -4,7 +4,8 @@ static-site-generator
 
 ## Description
 
-Static website generator based that is using jekyll format to generate [vane.pl](https://vane.pl) website  
+Static website generator based that is using jekyll format to generate [vane.pl](https://vane.pl) website.  
+No site configuration files or existing markdown data was changed to generate output.
 
 
 ## Dependencies
@@ -15,6 +16,8 @@ markdown - for makrdown parsing generation
 liquidpy - for liquid template parsing  
 
 Emulate
+- jekyl
+- rouge
 - jekyll-feed  
 - jekyll-sitemap  
 - jekyll-seo-tag  
