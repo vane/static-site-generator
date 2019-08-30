@@ -237,8 +237,7 @@ def seo_generate(post, data, config):
 <meta property="og:site_name" content="{site_name}" />{image_content}{article_content}
 <script type="application/ld+json">
 {json_data}
-</script>
-        """.format(**data3)
+</script>""".format(**data3)
     return data[:start]+content+data[end+3:]
 
 def feed_meta_generate(post, data, config):
@@ -247,6 +246,11 @@ def feed_meta_generate(post, data, config):
     tag = data[start+3:end]
     content = ''
     if tag.find('feed_meta') > -1:
+        content = """<link type="{type}" rel="alternate" href="{url}/feed.xml" title="{title}" />""".format(**{
+            'type': 'application/atom+xml',
+            'url':config['url'],
+            'title':config['title'],
+        })
         print('generate feed_meta for post {}'.format(post['url']))
     return data[:start]+content+data[end+3:]
 
