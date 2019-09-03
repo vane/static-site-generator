@@ -24,8 +24,10 @@ Emulate
 
 ## Install
 ```bash
-git clone
-pip install requirements.txt
+git clone https://github.com/vane/static-site-generator.git
+python3 -m venv static-site-generator-env
+source static-site-generator-env/bin/activate
+pip install -r static-site-generator/requirements.txt
 ```
 ## Usage
 Specify config.yml input and output directory  
