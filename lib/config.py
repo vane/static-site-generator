@@ -3,7 +3,7 @@
 import os
 import yaml
 import dateutil.parser
-import lib.generator
+from lib.generator import md
 
 class Config:
     INPUT = None
@@ -27,7 +27,7 @@ class ConfigObject:
         if item not in self.data:
             raise RuntimeError('problem')
         if item == 'content':
-            return lib.generator.md(self.data[item])
+            return md.generate(self.data[item])
         return self.data[item]
 
     @staticmethod

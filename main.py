@@ -10,7 +10,7 @@ import sass
 import csscompressor
 import dateutil.parser
 import lib.helper
-import lib.generator
+from lib.generator import feed_url, md, robots_txt, rss, seo, sitemap
 from lib.config import ConfigObject, read_config, Config
 
 
@@ -74,8 +74,8 @@ def generate_page(page_config, helpers=None):
     ret = layout.render(page=ConfigObject.create(page_config),
                         site=ConfigObject.create(Config.CONFIG),
                         **helpers)
-    ret = lib.generator.seo_generate(page_config, ret, Config.CONFIG)
-    ret = lib.generator.feed_meta_generate(page_config, ret, Config.CONFIG)
+    ret = seo.generate(page_config, ret, Config.CONFIG)
+    ret = feed_url.generate(page_config, ret, Config.CONFIG)
     out_path = lib.helper.join_path(Config.OUTPUT, page_config['url'])
     os.makedirs(out_path, exist_ok=True)
     lib.helper.write_file(lib.helper.join_path(out_path, 'index.html'), ret)
@@ -110,14 +110,14 @@ def generate():
         if fname.endswith('.markdown'):
             page_config = load_page(Config.INPUT, fname, split_fname=False)
             print('generate {}'.format(page_config['url']))
-            data = {'content': lib.generator.md(page_config['content'])}
+            data = {'content': md.generate(page_config['content'])}
             generate_page(page_config, data)
     generate_index(posts, helpers)
     copy_assets()
     generate_style()
-    lib.generator.sitemap(posts, Config.CONFIG, output=Config.OUTPUT)
-    lib.generator.robots_txt(Config.CONFIG, output=Config.OUTPUT)
-    lib.generator.feed_xml(posts, Config.CONFIG, output=Config.OUTPUT)
+    sitemap.generate(posts, Config.CONFIG, output=Config.OUTPUT)
+    robots_txt.generate(Config.CONFIG, output=Config.OUTPUT)
+    rss.generate(posts, Config.CONFIG, output=Config.OUTPUT)
     pass
 
 if __name__ == '__main__':
