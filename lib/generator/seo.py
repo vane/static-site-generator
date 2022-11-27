@@ -20,7 +20,6 @@ def generate(post, data, config):
             title = post['title']
         if description is None and 'content_raw' in post:
             description = lib.helper.strip_tags(md.generate(''.join(post['content_raw'][:2]).replace('\n', '')))
-        print(description)
         url = config['url']
         if 'url' in post:
             url += '/'+post['url']
