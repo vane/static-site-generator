@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
+import argparse
 import os
 import io
 import shutil
@@ -133,9 +134,12 @@ def generate():
 
 
 if __name__ == '__main__':
-    data = yaml.safe_load(open('config.yml'))
-    Config.INPUT = data['input']
-    Config.OUTPUT = data['output']
+    parser = argparse.ArgumentParser()
+    parser.add_argument('-i', '--input', help='Input directory')
+    parser.add_argument('-o', '--output', help='Output directory')
+    args = parser.parse_args()
+    Config.INPUT = args.input
+    Config.OUTPUT = args.output
     if not Config.INPUT and not Config.OUTPUT:
         raise RuntimeError('No output and input directory')
     generate()

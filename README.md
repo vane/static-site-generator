@@ -28,9 +28,18 @@ git clone https://github.com/vane/static-site-generator.git
 python3 -m .venv static-site-generator-env
 source static-site-generator-env/bin/activate
 pip install -r static-site-generator/requirements.txt
-python static_site_generator.py
 ```
 ## Usage
-Specify config.yml input and output directory  
-- input - directory with jekyll website data (where is _config.yml file)
+```bash
+python static_site_generator.py -h
+```  
+- input - directory with jekyll website data (the one containing _config.yml)
 - output - directory for generated files (assets directory in output will be deleted during generation)
+
+## Sample run
+```bash
+#!/bin/bash
+.venv/bin/python3 static_site_generator.py \
+-i /home/user/jekyl-blog-root \
+-o /home/user/blog-generated
+```
