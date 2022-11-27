@@ -38,7 +38,6 @@ class HighlightPreprocessor(Preprocessor):
                     start = line.find('%}')+2
                     end = line.find(self.end)
                     code = line[start:end]
-                    # print('code hightlight inline : {}'.format(code))
             if have_code == 1 and not skip:
                 code += line+'\n'
             if have_code == 2:
@@ -59,7 +58,7 @@ class HighlightPreprocessor(Preprocessor):
 
 class HighlightExtension(Extension):
     def extendMarkdown(self, md):
-        md.preprocessors.register(HighlightPreprocessor(md), 'highlight', 0)
+        md.preprocessors.register(HighlightPreprocessor(md), 'highlight', 999999)
 
 
 def generate(content):
