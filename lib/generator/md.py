@@ -1,15 +1,16 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 import markdown
-import markdown.extensions
-import markdown.preprocessors
 import pygments
 import pygments.lexers
-import pygments.formatters
+from markdown.extensions import Extension
+from markdown.preprocessors import Preprocessor
+from pygments.formatters.html import HtmlFormatter
 # for performance
 lexer_cache = {}
 
-class HighlightPreprocessor(markdown.preprocessors.Preprocessor):
+
+class HighlightPreprocessor(Preprocessor):
 
     def __init__(self, md=None):
         super().__init__(md)
@@ -37,7 +38,7 @@ class HighlightPreprocessor(markdown.preprocessors.Preprocessor):
                     start = line.find('%}')+2
                     end = line.find(self.end)
                     code = line[start:end]
-                    print('code hightlight inline : {}'.format(code))
+                    # print('code hightlight inline : {}'.format(code))
             if have_code == 1 and not skip:
                 code += line+'\n'
             if have_code == 2:
@@ -47,7 +48,7 @@ class HighlightPreprocessor(markdown.preprocessors.Preprocessor):
                     lexer_cache[language] = lexer
                 else:
                     lexer = lexer_cache[language]
-                line = pygments.highlight(code=code, lexer=lexer, formatter=pygments.formatters.HtmlFormatter())
+                line = pygments.highlight(code=code, lexer=lexer, formatter=HtmlFormatter())
                 have_code = 0
                 code = ''
             if have_code == 0:
@@ -55,9 +56,10 @@ class HighlightPreprocessor(markdown.preprocessors.Preprocessor):
             skip = False
         return output
 
-class HighlightExtension(markdown.extensions.Extension):
-    def extendMarkdown(self, md, md_globals):
-        md.preprocessors.add('highllight', HighlightPreprocessor(md), '_begin')
+
+class HighlightExtension(Extension):
+    def extendMarkdown(self, md):
+        md.preprocessors.register(HighlightPreprocessor(md), 'highlight', 0)
 
 
 def generate(content):

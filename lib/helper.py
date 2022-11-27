@@ -33,11 +33,28 @@ class FunctionHelper:
 
     @staticmethod
     def truncatewords(a, b):
-        return ' '.join(''.join(a).split(' ')[:b])+'...'
+        text = strip_tags(a)
+        out = '<p>'
+        lines = ''.join(text).split(' ')[:b]
+        for line in lines:
+            if line.strip():
+                out += line.strip() + ' '
+        out += '...</p>'
+        return out
 
     @staticmethod
     def highlight(*args, **kwargs):
         return ''
+
+
+class Paginator:
+    @property
+    def posts(self):
+        return lib.config.Config.CONFIG['posts']
+
+    @property
+    def total_pages(self):
+        return 1
 
 
 def get_helpers():
@@ -45,23 +62,28 @@ def get_helpers():
     helpers = {}
     for key in method_list:
         helpers[key] = getattr(FunctionHelper, key)
+    helpers['paginator'] = Paginator()
     return helpers
 
 
 def write_file(path, data):
-    with open(path, 'wb') as f:
+    with open(path, 'wb+') as f:
         f.write(data.encode('utf-8'))
+
 
 def read_file(path):
     with open(path) as f:
         data = f.read()
     return data
 
+
 def makedirs(path):
     os.makedirs(path, exist_ok=True)
 
+
 def join_path(path, *paths):
     return os.path.join(path, *paths)
+
 
 def strip_tags(data):
     return re.sub('<[^<]+?>', '', data).strip()

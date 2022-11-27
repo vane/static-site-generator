@@ -10,7 +10,7 @@ def generate(post, data, config):
     tag = data[start+3:end]
     content = ''
     if tag.find('seo') > -1:
-        print('generate seo for post {}'.format(post['url']))
+        # print('generate seo for post {}'.format(post['url']))
         locale = 'en_US'
         title = config['title']
         description = config['description']

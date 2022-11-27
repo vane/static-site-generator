@@ -11,7 +11,7 @@ import csscompressor
 import dateutil.parser
 import lib.helper
 from lib.generator import feed_url, md, robots_txt, rss, seo, sitemap
-from lib.config import ConfigObject, read_config, Config
+from lib.config import ConfigObject, Config
 
 
 def read_layouts(helpers):
@@ -20,12 +20,12 @@ def read_layouts(helpers):
     for i, fname in enumerate(os.listdir(path)):
         fpath = lib.helper.join_path(path, fname)
         data = lib.helper.read_file(fpath)
-        layout[fname.split('.')[0]] = liquid.Liquid(data, **helpers)
-    print('read layouts')
+        layout_name = fname.split('.')[0]
+        layout[layout_name] = liquid.Liquid(data, **helpers)
     Config.LAYOUT = layout
 
+
 def generate_style():
-    print('genreated css')
     style_path = lib.helper.join_path(Config.INPUT, Config.STYLE)
     fpath = lib.helper.join_path(style_path, Config.STYLE_INPUT_FILE_NAME)
     with open(fpath) as f:
@@ -35,6 +35,7 @@ def generate_style():
     lib.helper.makedirs(dst)
     data = csscompressor.compress(data)
     lib.helper.write_file(lib.helper.join_path(dst, Config.STYLE_OUTPUT_FILE_NAME), data)
+
 
 def load_page(path, fname, split_fname=True):
     content = ''
@@ -65,7 +66,12 @@ def load_page(path, fname, split_fname=True):
     else:
         url = fname.split('.')[0]
     page_config['url'] = url
+    if 'title' not in page_config:
+        page_config['title'] = ''
+    if 'keywords' not in page_config:
+        page_config['keywords'] = []
     return page_config
+
 
 def generate_page(page_config, helpers=None):
     if not helpers:
@@ -80,6 +86,7 @@ def generate_page(page_config, helpers=None):
     os.makedirs(out_path, exist_ok=True)
     lib.helper.write_file(lib.helper.join_path(out_path, 'index.html'), ret)
 
+
 def generate_index(posts, helpers):
     page_config = {'layout': 'default', 'url': ''}
     comparator = operator.attrgetter('date')
@@ -88,12 +95,15 @@ def generate_index(posts, helpers):
     print('generate index')
     generate_page(page_config=page_config, helpers=helpers)
 
+
 def copy_assets():
     src = lib.helper.join_path(Config.INPUT, Config.ASSETS)
     dst = lib.helper.join_path(Config.OUTPUT, Config.ASSETS)
-    print('copy assets')
-    shutil.rmtree(dst)
+    print('copy assets', src, dst)
+    if os.path.exists(dst):
+        shutil.rmtree(dst)
     shutil.copytree(src, dst)
+
 
 def generate():
     helpers = lib.helper.get_helpers()
@@ -103,13 +113,13 @@ def generate():
     posts = []
     for i, fname in enumerate(os.listdir(path)):
         page_config = load_page(path, fname)
-        print('generate {}'.format(page_config['url']))
+        print('generate post {}'.format(page_config['url']))
         posts.append(ConfigObject.create(page_config))
         generate_page(page_config)
     for i, fname in enumerate(os.listdir(Config.INPUT)):
         if fname.endswith('.markdown'):
             page_config = load_page(Config.INPUT, fname, split_fname=False)
-            print('generate {}'.format(page_config['url']))
+            print('generate page {}'.format(page_config['url']))
             data = {'content': md.generate(page_config['content'])}
             generate_page(page_config, data)
     generate_index(posts, helpers)
@@ -119,6 +129,7 @@ def generate():
     robots_txt.generate(Config.CONFIG, output=Config.OUTPUT)
     rss.generate(posts, Config.CONFIG, output=Config.OUTPUT)
     pass
+
 
 if __name__ == '__main__':
     data = yaml.safe_load(open('config.yml'))

@@ -25,15 +25,12 @@ Emulate
 ## Install
 ```bash
 git clone https://github.com/vane/static-site-generator.git
-python3 -m venv static-site-generator-env
+python3 -m .venv static-site-generator-env
 source static-site-generator-env/bin/activate
 pip install -r static-site-generator/requirements.txt
+python static_site_generator.py
 ```
 ## Usage
 Specify config.yml input and output directory  
 - input - directory with jekyll website data (where is _config.yml file)
 - output - directory for generated files (assets directory in output will be deleted during generation)
-
-## Why
-Because I can.  
-So I recreated jekyll with all above plugins using 400 lines of python code.
