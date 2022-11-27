@@ -115,6 +115,7 @@ def generate():
         page_config = load_page(path, fname)
         print('generate post {}'.format(page_config['url']))
         posts.append(ConfigObject.create(page_config))
+        page_config['description'] = lib.helper.strip_tags(md.generate(''.join(page_config['content_raw'][:2]).replace('\n', '')))
         generate_page(page_config)
     for i, fname in enumerate(os.listdir(Config.INPUT)):
         if fname.endswith('.markdown'):

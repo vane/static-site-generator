@@ -13,13 +13,14 @@ def generate(post, data, config):
         # print('generate seo for post {}'.format(post['url']))
         locale = 'en_US'
         title = config['title']
-        description = config['description']
+        description = post.get('description') or config['description']
         if 'locale' in post:
             locale = post['locale']
         if 'title' in post:
             title = post['title']
-        if 'content_raw' in post:
-            description = lib.helper.strip_tags(md.generate(post['content_raw'][0]))
+        if description is None and 'content_raw' in post:
+            description = lib.helper.strip_tags(md.generate(''.join(post['content_raw'][:2]).replace('\n', '')))
+        print(description)
         url = config['url']
         if 'url' in post:
             url += '/'+post['url']
