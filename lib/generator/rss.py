@@ -1,8 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-import urllib.parse
-import lib.helper
 from datetime import datetime
+import lib.helper
 from lib.generator import md
 
 
@@ -34,9 +33,6 @@ def generate(posts, config, output, generator='vane.pl', generator_url='https://
 <published>{published}</published>
 <updated>{published}</updated>
 <id>{url}</id>
-<content type="html" xml:base="{url}">
-{content}
-</content>
 <author>
 <name>{author}</name>
 </author>
@@ -47,7 +43,6 @@ def generate(posts, config, output, generator='vane.pl', generator_url='https://
 """.format(**{
             'url': config['url']+'/'+p.url,
             'title': p.title,
-            'content': urllib.parse.quote(p.content),
             'published': p.date.isoformat(),
             'category': category,
             'author': p.author,
